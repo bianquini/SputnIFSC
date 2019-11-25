@@ -11,25 +11,17 @@ render.autoClearColor = false;
 var canvas = cenario.getCanvas();
 document.body.appendChild(canvas);
 
-var controls = new THREE.OrbitControls( camera, canvas );
-
-//controls.update() must be called after any manual changes to the camera's transform
-controls.update();
-
-// var controls = new THREE.OrbitControls(camera, canvas);
-// controls.target.set(0, 0, 0);
-// controls.update();
-
 //Luz Ambiente
 var luz = cenario.buildAmbientLight(0, 0, 1);
 cena.add(luz);
 
-var geometry = new THREE.BoxGeometry(1, 1, 1);
-var materialCubo = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-var cube = new THREE.Mesh(geometry, materialCubo);
-cube.position.z = -5;
-cena.add(cube);
+//Controle de Câmera
+var controls = new THREE.OrbitControls(camera, canvas);
+//controls.update() must be called after any manual changes to the camera's transform
+controls.update();
 
+
+//Iniciando Textura do Espaço
 var loader = new THREE.TextureLoader();
 var texture = loader.load(
     '../Textures/Space.jpg',
@@ -50,10 +42,40 @@ var bgMesh;
         side: THREE.BackSide,
     });
     material.uniforms.tEquirect.value = texture;
-    var plane = new THREE.BoxBufferGeometry(2, 2, 2);
+    var plane = new THREE.BoxBufferGeometry(80, 80, 80);
     bgMesh = new THREE.Mesh(plane, material);
     bgScene.add(bgMesh);
 }
+
+//Criando a Terra, Atmosfera e Lua
+var containerEarth = new THREE.Object3D()
+containerEarth.rotateZ(-23.4 * Math.PI / 180)
+containerEarth.position.z = 0
+cena.add(containerEarth)
+
+var moonMesh = THREEx.Planets.createMoon()
+moonMesh.position.set(0.5, 0.5, 0.5)
+moonMesh.scale.multiplyScalar(1 / 5)
+moonMesh.receiveShadow = true
+moonMesh.castShadow = true
+containerEarth.add(moonMesh)
+
+var earthMesh = THREEx.Planets.create("Earth")
+earthMesh.receiveShadow = true
+earthMesh.castShadow = true
+containerEarth.add(earthMesh)
+
+var geometry = new THREE.SphereGeometry(0.38, 32, 32)
+var material = THREEx.createAtmosphereMaterial()
+material.side = THREE.BackSide
+material.uniforms.glowColor.value.set(0x00090ff)
+material.uniforms.coeficient.value = 0.5
+material.uniforms.power.value = 4.0
+var mesh = new THREE.Mesh(geometry, material);
+mesh.scale.multiplyScalar(1.15);
+containerEarth.add(mesh);
+
+//Terminando de criar a Terra, Atmosfera e Lua
 
 //Renderiza na Tela
 function desenhar() {
