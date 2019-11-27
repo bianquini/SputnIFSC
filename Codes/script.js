@@ -14,16 +14,14 @@ var controls = new THREE.OrbitControls( camera, canvas );
 //controls.update() must be called after any manual changes to the camera's transform
 controls.update();
 
-var earth = new Earth();
-
 //Luz Ambiente
 var luz = cenario.buildAmbientLight(0, 0, 1);
 cena.add(luz);
 
-var sky = earth.getEarth();
-console.log("add");
-cena.add(sky);
-console.log("adicionou")
+//Ifsc
+var earth = new Earth();
+var ifsc = earth.getEarth();
+cena.add(ifsc);
 
 //Renderiza na Tela
 function desenhar() {
