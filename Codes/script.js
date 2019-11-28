@@ -22,6 +22,10 @@ var earth = new Earth();
 var ifsc = earth.getEarth();
 cena.add(ifsc);
 
+//Plataforma
+var plataform = earth.getPlataform();
+cena.add(plataform);
+
 //Controle de Câmera
 var controls = new THREE.OrbitControls(camera, canvas);
 //controls.update() must be called after any manual changes to the camera's transform
