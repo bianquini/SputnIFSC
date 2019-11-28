@@ -11,10 +11,6 @@ render.autoClearColor = false;
 
 var canvas = cenario.getCanvas();
 document.body.appendChild(canvas);
-var controls = new THREE.OrbitControls( camera, canvas );
-
-//controls.update() must be called after any manual changes to the camera's transform
-controls.update();
 
 //Luz Ambiente
 var luz = cenario.buildAmbientLight(0, 0, 1);
@@ -101,7 +97,7 @@ containerVenus.add(venusMesh)
 //Criando Mercurio
 var containerMercury = new THREE.Object3D()
 containerMercury.rotateZ(-23.4 * Math.PI / 180)
-containerMercury.position.z = 2 
+containerMercury.position.z = 2
 cena.add(containerMercury)
 
 var mercuryMesh = THREEx.Planets.create("Mercury")
@@ -113,7 +109,7 @@ containerMercury.add(mercuryMesh)
 //Criando Marte
 var containerMars = new THREE.Object3D()
 containerMars.rotateZ(-23.4 * Math.PI / 180)
-containerMars.position.z = -1 
+containerMars.position.z = -1
 cena.add(containerMars)
 
 var marsMesh = THREEx.Planets.create("Mars")
@@ -125,7 +121,7 @@ containerMars.add(marsMesh)
 //Criando Jupiter
 var containerJupiter = new THREE.Object3D()
 containerJupiter.rotateZ(-23.4 * Math.PI / 180)
-containerJupiter.position.z = -3 
+containerJupiter.position.z = -3
 cena.add(containerJupiter)
 
 var jupiterMesh = THREEx.Planets.create("Jupiter")
@@ -137,7 +133,7 @@ containerJupiter.add(jupiterMesh)
 //Criando Saturno
 var containerSaturn = new THREE.Object3D()
 containerSaturn.rotateZ(-23.4 * Math.PI / 180)
-containerSaturn.position.z = -7 
+containerSaturn.position.z = -7
 cena.add(containerSaturn)
 
 var saturnMesh = THREEx.Planets.create("Saturn")
@@ -149,7 +145,7 @@ containerSaturn.add(saturnMesh)
 //Criando Urano
 var containerUranus = new THREE.Object3D()
 containerUranus.rotateZ(-23.4 * Math.PI / 180)
-containerUranus.position.z = -10 
+containerUranus.position.z = -10
 cena.add(containerUranus)
 
 var uranusMesh = THREEx.Planets.create("Uranus")
@@ -161,7 +157,7 @@ containerUranus.add(uranusMesh)
 //Criando Netuno
 var containerNeptune = new THREE.Object3D()
 containerNeptune.rotateZ(-23.4 * Math.PI / 180)
-containerNeptune.position.z = -13 
+containerNeptune.position.z = -13
 cena.add(containerNeptune)
 
 var neptuneMesh = THREEx.Planets.create("Neptune")
@@ -173,7 +169,7 @@ containerNeptune.add(neptuneMesh)
 //Criando Plutao
 var containerPluto = new THREE.Object3D()
 containerPluto.rotateZ(-23.4 * Math.PI / 180)
-containerPluto.position.z = -15 
+containerPluto.position.z = -15
 cena.add(containerPluto)
 
 var plutoMesh = THREEx.Planets.create("Pluto")
@@ -185,7 +181,7 @@ containerPluto.add(plutoMesh)
 //Criando Sol
 var containerSun = new THREE.Object3D()
 containerSun.rotateZ(-23.4 * Math.PI / 180)
-containerSun.position.z = 5 
+containerSun.position.z = 5
 cena.add(containerSun)
 
 var sunMesh = THREEx.Planets.create("Sun")
