@@ -16,10 +16,15 @@ var controls = new THREE.OrbitControls( camera, canvas );
 //controls.update() must be called after any manual changes to the camera's transform
 controls.update();
 
-
 //Luz Ambiente
 var luz = cenario.buildAmbientLight(0, 0, 1);
 cena.add(luz);
+
+
+//Ifsc
+var earth = new Earth();
+var ifsc = earth.getEarth();
+cena.add(ifsc);
 
 //Controle de Câmera
 var controls = new THREE.OrbitControls(camera, canvas);
@@ -188,6 +193,7 @@ sunMesh.receiveShadow = true
 sunMesh.castShadow = true
 containerSun.add(sunMesh)
 //Terminando Sol
+
 
 
 //Renderiza na Tela
