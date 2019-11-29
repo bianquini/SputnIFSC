@@ -194,6 +194,13 @@ sunMesh.castShadow = true
 containerSun.add(sunMesh)
 //Terminando Sol
 
+//Criando Foguete
+var gLoader = new THREE.GLTFLoader();
+        gLoader.load('../Models/rocketModel.gltf', function(gltf){
+
+          cena.add(gltf.scene);
+          desenhar();
+        });
 
 
 //Renderiza na Tela
