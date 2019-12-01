@@ -8,6 +8,7 @@ class Earth {
         var meshEarth = new THREE.MeshBasicMaterial({ map: ifsc });
         meshEarth.side = THREE.BackSide;
         var earth = new THREE.Mesh(geometryEarth, meshEarth);
+        earth.position.z = 13
 
         var geometryGrass = new THREE.CircleGeometry(0.37, 32);
         var grass = new THREE.TextureLoader().load('../Images/grass.png');
@@ -15,6 +16,7 @@ class Earth {
         var base = new THREE.Mesh(geometryGrass, meshGrass);
         base.rotation.x = -Math.PI / 2;
         base.position.y = -0.15;
+        base.position.z = 13;
 
         var group = new THREE.Group();
         group.add(earth);
@@ -30,6 +32,7 @@ class Earth {
         var tower = new THREE.Mesh(geometry, material);
         tower.position.x = -0.15;
         tower.position.y = 0.005;
+        tower.position.z = 13;
 
         var geometry = new THREE.BoxGeometry(0.65, 0.25, 0.01);
         var concrete = new THREE.TextureLoader().load('../Images/base.jpg');
@@ -37,17 +40,20 @@ class Earth {
         var base = new THREE.Mesh(geometry, material);
         base.rotation.x = Math.PI / 2;
         base.position.y = -0.145;
+        base.position.z = 13;
 
         var geometry = new THREE.CylinderGeometry(0.05, 0.05, 0.3, 32);
         var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
         var elevator = new THREE.Mesh(geometry, material);
         elevator.position.x = -0.15;
+        elevator.position.z = 13;
 
         var geometry = new THREE.BoxGeometry(0.1, 0.08, 0.08);
         var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
         var tunnelDoor = new THREE.Mesh(geometry, material);
         tunnelDoor.position.x = -0.17;
         tunnelDoor.position.y = -0.1;
+        tunnelDoor.position.z = 13;
         tunnelDoor.rotation.x = Math.PI / 2;
 
         var geometry = new THREE.BoxGeometry(0.1, 0.08, 0.08);
@@ -55,6 +61,7 @@ class Earth {
         var tunnel = new THREE.Mesh(geometry, material);
         tunnel.position.x = -0.09;
         tunnel.position.y = 0.1;
+        tunnel.position.z = 13;
         tunnel.rotation.x = Math.PI / 2;
 
         var geometry = new THREE.PlaneGeometry(0.08, 0.07, 32);
@@ -63,6 +70,7 @@ class Earth {
         var doorBelow = new THREE.Mesh(geometry, material);
         doorBelow.position.x = -0.2209;
         doorBelow.position.y = -0.11;
+        doorBelow.position.z = 13;
         doorBelow.rotation.y = Math.PI / 2;
 
         var geometry = new THREE.PlaneGeometry(0.08, 0.07, 32);
@@ -71,6 +79,7 @@ class Earth {
         var doorUp = new THREE.Mesh(geometry, material);
         doorUp.position.x = -0.0398;
         doorUp.position.y = 0.1;
+        doorUp.position.z = 13;
         doorUp.rotation.y = Math.PI / 2;
 
         var group = new THREE.Group();
