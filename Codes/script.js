@@ -2,7 +2,11 @@
 //Inicialização da Cena
 var cena = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 0, 3);
+camera.position.set(0.3, 0.02, 13);
+
+// camera.lookAt(cena.position);
+
+
 
 //Inicialização do Canvas
 var cenario = new Scenario();
@@ -27,7 +31,6 @@ cena.add(plataform);
 
 //Controle de Câmera
 var controls = new THREE.OrbitControls(camera, canvas);
-controls.update();
 
 
 //Iniciando Textura do Espaço
@@ -61,7 +64,7 @@ containerEarth.position.z = 13
 cena.add(containerEarth)
 
 var moonMesh = THREEx.Planets.createMoon()
-moonMesh.position.set(0,0.5,1)
+moonMesh.position.set(0, 0.5, 1)
 moonMesh.scale.multiplyScalar(1 / 5)
 moonMesh.receiveShadow = true
 moonMesh.castShadow = true
@@ -137,7 +140,7 @@ var saturnMesh = THREEx.Planets.create("Saturn")
 saturnMesh.receiveShadow = true
 saturnMesh.castShadow = true
 //saturnMesh.getObjectByName("").rotation.y += 0.008;
-saturnMesh.rotation.z=0
+saturnMesh.rotation.z = 0
 containerSaturn.add(saturnMesh)
 //Terminando Saturno
 
@@ -149,7 +152,7 @@ cena.add(containerUranus)
 var uranusMesh = THREEx.Planets.create("Uranus")
 uranusMesh.receiveShadow = true
 uranusMesh.castShadow = true
-uranusMesh.rotation.z=0
+uranusMesh.rotation.z = 0
 containerUranus.add(uranusMesh)
 //Terminando Urano
 
@@ -240,6 +243,8 @@ solarSystem.add(plutoOrbit);
 
 cena.add(solarSystem)
 
+
+
 function update() {
     //Rotação dos Corpos Celestes
     moonMesh.rotation.y += 0.001;
@@ -248,11 +253,11 @@ function update() {
     containerVenus.rotation.y += 0.04;
     containerMars.rotation.y += 0.02;
     containerJupiter.rotation.y += 0.05;
-    containerSaturn.rotation.y +=0.008;
-    containerUranus.rotation.y +=0.003;
-    containerNeptune.rotation.y +=0.008;
-    containerNeptune.rotation.y +=0.009;
-    containerPluto.rotation.y +=0.01;
+    containerSaturn.rotation.y += 0.008;
+    containerUranus.rotation.y += 0.003;
+    containerNeptune.rotation.y += 0.008;
+    containerNeptune.rotation.y += 0.009;
+    containerPluto.rotation.y += 0.01;
     containerSun.rotation.y += 0.001;
 
     //Translação dos Corpos Celestes
@@ -265,28 +270,37 @@ function update() {
     uranusOrbit.rotation.y += 0.0002;
     neptuneOrbit.rotation.y += 0.0001;
     plutoOrbit.rotation.y += 0.00008;
+
+
 }
 
+//TODO arrumar lookAt para o foguete
 //Criando Foguete
 var gloader = new THREE.GLTFLoader();
-
-gloader.load( '../Models/rocket.gltf', function ( gltf ) {
+var model =  new THREE.Scene();
+gloader.load('../Models/rocket.gltf', function (gltf) {
 
     var rocket = gltf.scene.children[0];
-    rocket.position.set(0.03,0.1,0);
-    rocket.scale.set(0.05,0.05,0.05);
-    rocket.rotation.x = Math.PI /2;
-	cena.add( gltf.scene );
+    rocket.position.set(0, 0.02, 13);
+    rocket.scale.set(0.02, 0.02, 0.02);
+    rocket.rotation.x = Math.PI / 2;
+    model = rocket;
+    cena.add(gltf.scene);
 
-}, undefined, function ( error ) {
+   // init();
 
-	console.error( error );
 
-} );
+}, undefined, function (error) {
 
+    console.error(error);
+
+});
+
+model.position.z = 4;
 
 //Renderiza na Tela
 function desenhar() {
+    camera.lookAt(containerEarth.position);
     bgMesh.position.copy(camera.position);
     render.render(bgScene, camera);
     render.render(cena, camera);
@@ -295,3 +309,12 @@ function desenhar() {
     requestAnimationFrame(desenhar);
 }
 requestAnimationFrame(desenhar);
+
+
+
+
+
+
+function init(){
+    camera.lookAt(model.position);
+}
