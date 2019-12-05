@@ -1,6 +1,9 @@
 "use strict";
+import { Lensflare, LensflareElement } from './jsm/objects/Lensflare.js';
 //Inicialização da Cena
 var cena = new THREE.Scene();
+cena.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
+cena.fog = new THREE.Fog(cena.background, 3500, 15000);
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0.3, 0.02, 13);
 
@@ -189,6 +192,53 @@ sunMesh.castShadow = true
 containerSun.add(sunMesh)
 //Terminando Sol
 
+
+// lights
+var dirLight = new THREE.AmbientLight(0xffffff, 0.05);
+dirLight.position.set(0, - 1, 0).normalize();
+dirLight.color.setHSL(0.1, 0.7, 0.5);
+cena.add(dirLight);
+// lensflares
+var textureLoader = new THREE.TextureLoader();
+var textureFlare0 = textureLoader.load('textures/lensflare/lensflare0.png');
+var textureFlare3 = textureLoader.load('textures/lensflare/lensflare3.png');
+addLight(0.55, 0.9, 0.5, 5000, 0, - 1000);
+addLight(0.08, 0.8, 0.5, 0, 0, - 1000);
+addLight(0.995, 0.5, 0.9, 5000, 5000, - 1000);
+function addLight(h, s, l, x, y, z) {
+    var light = new THREE.PointLight(0xffffff, 1.5, 2000);
+    light.color.setHSL(h, s, l);
+    light.position.set(x, y, z);
+    var lensflare = new Lensflare();
+    lensflare.addElement(new LensflareElement(textureFlare0, 700, 0, light.color));
+    lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
+    lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
+    lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
+    lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
+    light.add(lensflare);
+    cena.add(light);
+}
+
+/*
+var light = new THREE.PointLight( 0xffffff, 1.5, 2000 );
+
+var textureLoader = new THREE.TextureLoader();
+
+var textureFlare0 = textureLoader.load('textures/lensflare/lensflare0.png');
+var textureFlare3 = textureLoader.load('textures/lensflare/lensflare3.png');
+
+var lensflare = new Lensflare();
+
+lensflare.addElement( new LensflareElement( textureFlare0, 512, 0 ) );
+lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
+lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
+lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
+lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
+
+light.add( lensflare );
+cena.add(light);
+*/
+
 //Orbita de Mercurio
 var mercuryOrbit = new THREE.Object3D();
 mercuryOrbit.add(containerMercury)
@@ -297,6 +347,7 @@ gloader.load('../Models/rocket.gltf', function (gltf) {
 });
 
 model.position.z = 4;
+
 
 //Renderiza na Tela
 function desenhar() {

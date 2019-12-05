@@ -168,9 +168,9 @@ THREEx.Planets.create = function(body, skipextras) {
     mesh.add(THREEx.Planets.createClouds(body));
   }  
 
-  if (!skipextras && body === "sol") {
-    mesh.add(THREEx.Planets.createCorona());
-  }  
+  // if (!skipextras && body === "sol") {
+  //   mesh.add(THREEx.Planets.createCorona());
+  // }  
   mesh.rotateY(THREE.Math.degToRad(p.rotation[0]-180));    
   mesh.rotateZ(THREE.Math.degToRad(90-p.rotation[1]));  
   return mesh;
