@@ -6,7 +6,6 @@ cena.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
 cena.fog = new THREE.Fog(cena.background, 3500, 15000);
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0.3, 0.02, 13);
-
 // camera.lookAt(cena.position);
 
 
@@ -34,6 +33,7 @@ cena.add(plataform);
 
 //Controle de Câmera
 var controls = new THREE.OrbitControls(camera, canvas);
+controls.update();
 
 
 //Iniciando Textura do Espaço
@@ -331,13 +331,13 @@ var model =  new THREE.Scene();
 gloader.load('../Models/rocket.gltf', function (gltf) {
 
     var rocket = gltf.scene.children[0];
-    rocket.position.set(0, 0.02, 13);
+    rocket.position.set(-0.04, -0.05, 13);
     rocket.scale.set(0.02, 0.02, 0.02);
     rocket.rotation.x = Math.PI / 2;
     model = rocket;
     cena.add(gltf.scene);
 
-   // init();
+    init();
 
 
 }, undefined, function (error) {
@@ -346,12 +346,13 @@ gloader.load('../Models/rocket.gltf', function (gltf) {
 
 });
 
-model.position.z = 4;
 
 
 //Renderiza na Tela
 function desenhar() {
-    camera.lookAt(containerEarth.position);
+    model.position.y += 0.001;
+    camera.position.y += 0.001;
+   
     bgMesh.position.copy(camera.position);
     render.render(bgScene, camera);
     render.render(cena, camera);
@@ -362,10 +363,7 @@ function desenhar() {
 requestAnimationFrame(desenhar);
 
 
-
-
-
-
 function init(){
-    camera.lookAt(model.position);
+    controls.target = model.position;
+    init();
 }
