@@ -182,14 +182,15 @@ plutoMesh.castShadow = true
 containerPluto.add(plutoMesh)
 //Terminando Plutao
 
+//FIXME Decidir se será usado uma luz, ou um objeto 
 //Criando Sol
-var containerSun = new THREE.Object3D()
-cena.add(containerSun)
+// var containerSun = new THREE.Object3D()
+// cena.add(containerSun)
 
-var sunMesh = THREEx.Planets.create("Sun")
-sunMesh.receiveShadow = true
-sunMesh.castShadow = true
-containerSun.add(sunMesh)
+// var sunMesh = THREEx.Planets.create("Sun")
+// sunMesh.receiveShadow = true
+// sunMesh.castShadow = true
+// containerSun.add(sunMesh)
 //Terminando Sol
 
 
@@ -210,34 +211,16 @@ function addLight(h, s, l, x, y, z) {
     light.color.setHSL(h, s, l);
     light.position.set(x, y, z);
     var lensflare = new Lensflare();
-    lensflare.addElement(new LensflareElement(textureFlare0, 700, 0, light.color));
-    lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
-    lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
+    lensflare.addElement(new LensflareElement(textureFlare0, 1000, 0, light.color));
+    lensflare.addElement(new LensflareElement(textureFlare3, 600, 0.6));
+    lensflare.addElement(new LensflareElement(textureFlare3, 700, 0.7));
     lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
-    lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
+    lensflare.addElement(new LensflareElement(textureFlare3, 700, 1));
     light.add(lensflare);
+    light.position.z = 0;
     cena.add(light);
 }
 
-/*
-var light = new THREE.PointLight( 0xffffff, 1.5, 2000 );
-
-var textureLoader = new THREE.TextureLoader();
-
-var textureFlare0 = textureLoader.load('textures/lensflare/lensflare0.png');
-var textureFlare3 = textureLoader.load('textures/lensflare/lensflare3.png');
-
-var lensflare = new Lensflare();
-
-lensflare.addElement( new LensflareElement( textureFlare0, 512, 0 ) );
-lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
-lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
-lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
-lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
-
-light.add( lensflare );
-cena.add(light);
-*/
 
 //Orbita de Mercurio
 var mercuryOrbit = new THREE.Object3D();
@@ -278,7 +261,7 @@ plutoOrbit.add(containerPluto)
 
 //Grupo do Sistema Solar
 var solarSystem = new THREE.Group();
-solarSystem.add(containerSun);
+//solarSystem.add(containerSun);
 
 solarSystem.add(earthOrbit);
 solarSystem.add(venusOrbit);
@@ -308,7 +291,8 @@ function update() {
     containerNeptune.rotation.y += 0.008;
     containerNeptune.rotation.y += 0.009;
     containerPluto.rotation.y += 0.01;
-    containerSun.rotation.y += 0.001;
+
+    //containerSun.rotation.y += 0.001;
 
     //Translação dos Corpos Celestes
     mercuryOrbit.rotation.y += 0.005;
