@@ -1,13 +1,15 @@
 "use strict";
 import { Lensflare, LensflareElement } from './jsm/objects/Lensflare.js';
+VolumetricFire.texturePath = "../Modules/VolumetricFire/textures/";
+
 //Inicialização da Cena
+var clock = new THREE.Clock();
 var cena = new THREE.Scene();
 cena.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
 cena.fog = new THREE.Fog(cena.background, 3500, 15000);
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0.3, 0.02, 13);
 // camera.lookAt(cena.position);
-
 
 
 //Inicialização do Canvas
@@ -311,7 +313,7 @@ function update() {
 //TODO arrumar lookAt para o foguete
 //Criando Foguete
 var gloader = new THREE.GLTFLoader();
-var model =  new THREE.Scene();
+var model = new THREE.Scene();
 gloader.load('../Models/rocket.gltf', function (gltf) {
 
     var rocket = gltf.scene.children[0];
@@ -330,13 +332,32 @@ gloader.load('../Models/rocket.gltf', function (gltf) {
 
 });
 
+//TODO Posicionar e se movimentar em relação ao foguete
+var fireWidth  = 0.08;
+var fireHeight = 0.12;
+var fireDepth  = 0.12;
+var sliceSpacing = 0.2;
+
+var fire = new VolumetricFire(
+    fireWidth,
+    fireHeight,
+    fireDepth,
+    sliceSpacing,
+    camera
+  );
+
+  cena.add( fire.mesh );
+  fire.mesh.position.set( 0, 0.1,13);
+  fire.mesh.rotation.x = Math.PI;
 
 
 //Renderiza na Tela
 function desenhar() {
-    model.position.y += 0.001;
-    camera.position.y += 0.001;
-   
+    //model.position.y += 0.001;
+    //camera.position.y += 0.001;
+    var elapsed = clock.getElapsedTime();
+    fire.update( elapsed );
+
     bgMesh.position.copy(camera.position);
     render.render(bgScene, camera);
     render.render(cena, camera);
@@ -347,7 +368,7 @@ function desenhar() {
 requestAnimationFrame(desenhar);
 
 
-function init(){
+function init() {
     controls.target = model.position;
     init();
 }
