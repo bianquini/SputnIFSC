@@ -1,16 +1,14 @@
 "use strict";
-import { Lensflare, LensflareElement } from './jsm/objects/Lensflare.js';
-VolumetricFire.texturePath = "../Modules/VolumetricFire/textures/";
+import { Lensflare, LensflareElement } from '../Modules/lensflare/Lensflare.js';
+import particleFire from '../Modules/three-particle-fire/src/three-particle-fire.js';
+
+particleFire.install({ THREE: THREE });
 
 //Inicialização da Cena
 var clock = new THREE.Clock();
 var cena = new THREE.Scene();
-cena.background = new THREE.Color().setHSL(0.51, 0.4, 0.01);
-cena.fog = new THREE.Fog(cena.background, 3500, 15000);
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0.3, 0.02, 13);
-// camera.lookAt(cena.position);
-
 
 //Inicialização do Canvas
 var cenario = new Scenario();
@@ -36,7 +34,6 @@ cena.add(plataform);
 //Controle de Câmera
 var controls = new THREE.OrbitControls(camera, canvas);
 controls.update();
-
 
 //Iniciando Textura do Espaço
 var loader = new THREE.TextureLoader();
@@ -195,35 +192,6 @@ containerPluto.add(plutoMesh)
 // containerSun.add(sunMesh)
 //Terminando Sol
 
-
-// lights
-var dirLight = new THREE.AmbientLight(0xffffff, 0.05);
-dirLight.position.set(0, - 1, 0).normalize();
-dirLight.color.setHSL(0.1, 0.7, 0.5);
-cena.add(dirLight);
-// lensflares
-var textureLoader = new THREE.TextureLoader();
-var textureFlare0 = textureLoader.load('textures/lensflare/lensflare0.png');
-var textureFlare3 = textureLoader.load('textures/lensflare/lensflare3.png');
-addLight(0.55, 0.9, 0.5, 5000, 0, - 1000);
-addLight(0.08, 0.8, 0.5, 0, 0, - 1000);
-addLight(0.995, 0.5, 0.9, 5000, 5000, - 1000);
-function addLight(h, s, l, x, y, z) {
-    var light = new THREE.PointLight(0xffffff, 1.5, 2000);
-    light.color.setHSL(h, s, l);
-    light.position.set(x, y, z);
-    var lensflare = new Lensflare();
-    lensflare.addElement(new LensflareElement(textureFlare0, 1000, 0, light.color));
-    lensflare.addElement(new LensflareElement(textureFlare3, 600, 0.6));
-    lensflare.addElement(new LensflareElement(textureFlare3, 700, 0.7));
-    lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
-    lensflare.addElement(new LensflareElement(textureFlare3, 700, 1));
-    light.add(lensflare);
-    light.position.z = 0;
-    cena.add(light);
-}
-
-
 //Orbita de Mercurio
 var mercuryOrbit = new THREE.Object3D();
 mercuryOrbit.add(containerMercury)
@@ -278,12 +246,10 @@ solarSystem.add(plutoOrbit);
 
 cena.add(solarSystem)
 
-
-
 function update() {
     //Rotação dos Corpos Celestes
-    moonMesh.rotation.y += 0.001;
     //containerEarth.rotation.y += 0.01;
+    moonMesh.rotation.y += 0.001;
     containerMercury.rotation.y += 0.03;
     containerVenus.rotation.y += 0.04;
     containerMars.rotation.y += 0.02;
@@ -297,20 +263,38 @@ function update() {
     //containerSun.rotation.y += 0.001;
 
     //Translação dos Corpos Celestes
+    //earthOrbit.rotation.y += 0.001;
     mercuryOrbit.rotation.y += 0.005;
     venusOrbit.rotation.y += 0.003;
-    //earthOrbit.rotation.y += 0.001;
     marsOrbit.rotation.y += 0.0008;
     jupiterOrbit.rotation.y += 0.0005;
     saturnOrbit.rotation.y += 0.0003;
     uranusOrbit.rotation.y += 0.0002;
     neptuneOrbit.rotation.y += 0.0001;
     plutoOrbit.rotation.y += 0.00008;
-
-
 }
 
-//TODO arrumar lookAt para o foguete
+
+// lensflares
+var textureLoader = new THREE.TextureLoader();
+var textureFlare0 = textureLoader.load('../Images/lensflare/lensflare0.png');
+var textureFlare3 = textureLoader.load('../Images/lensflare/lensflare3.png');
+addLight(0.08, 0.8, 0.8, 0, 0, - 1000);
+function addLight(h, s, l, x, y, z) {
+    var light = new THREE.PointLight(0xffffff, 1.5, 2000);
+    light.color.setHSL(h, s, l);
+    light.position.set(x, y, z);
+    var lensflare = new Lensflare();
+    lensflare.addElement(new LensflareElement(textureFlare0, 1000, 0, light.color));
+    lensflare.addElement(new LensflareElement(textureFlare3, 600, 0.6));
+    lensflare.addElement(new LensflareElement(textureFlare3, 700, 0.7));
+    lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
+    lensflare.addElement(new LensflareElement(textureFlare3, 700, 1));
+    light.add(lensflare);
+    light.position.z = 0;
+    cena.add(light);
+}
+
 //Criando Foguete
 var gloader = new THREE.GLTFLoader();
 var model = new THREE.Scene();
@@ -323,7 +307,10 @@ gloader.load('../Models/rocket.gltf', function (gltf) {
     model = rocket;
     cena.add(gltf.scene);
 
-    init();
+    //loop para ajustar a camera ao foguete
+    window.setInterval(function () {
+        controls.target = model.position;
+    }, 2000);
 
 
 }, undefined, function (error) {
@@ -332,31 +319,36 @@ gloader.load('../Models/rocket.gltf', function (gltf) {
 
 });
 
+//Terminando de criar Foguete
+
 //TODO Posicionar e se movimentar em relação ao foguete
-var fireWidth  = 0.08;
-var fireHeight = 0.12;
-var fireDepth  = 0.12;
-var sliceSpacing = 0.2;
+//Criando Fogo do Motor
+var fireRadius = 0.01;
+var fireHeight = 0.2;
+var particleCount = 60;
 
-var fire = new VolumetricFire(
-    fireWidth,
-    fireHeight,
-    fireDepth,
-    sliceSpacing,
-    camera
-  );
+var geometryFire = new particleFire.Geometry(fireRadius, fireHeight, particleCount);
+var materialFire = new particleFire.Material({ color: 0xff2200 });
+materialFire.setPerspective(camera.fov, window.innerHeight / 6);
+var particleFireMesh = new THREE.Points(geometryFire, materialFire);
+particleFireMesh.rotation.x = Math.PI;
 
-  cena.add( fire.mesh );
-  fire.mesh.position.set( 0, 0.1,13);
-  fire.mesh.rotation.x = Math.PI;
+cena.add(particleFireMesh);
+//Terminando de criar Fogo do Motor
 
 
 //Renderiza na Tela
 function desenhar() {
-    //model.position.y += 0.001;
-    //camera.position.y += 0.001;
-    var elapsed = clock.getElapsedTime();
-    fire.update( elapsed );
+    //FIXME Retirar valores de teste, a fazer movimentação do foguete 
+    //por comandos do usuário
+    model.position.y += 0.001;
+    camera.position.y += 0.001;
+
+    //FIXME Fazer o fogo rotacionar junto do foguete (quem sabe criar um group para os dois)
+    particleFireMesh.position.set(model.position.x, model.position.y - 0.1, model.position.z - 0.021);
+
+    var delta = clock.getDelta();
+    particleFireMesh.material.update(delta);
 
     bgMesh.position.copy(camera.position);
     render.render(bgScene, camera);
@@ -368,7 +360,3 @@ function desenhar() {
 requestAnimationFrame(desenhar);
 
 
-function init() {
-    controls.target = model.position;
-    init();
-}
