@@ -5,6 +5,7 @@ import particleFire from '../Modules/three-particle-fire/src/three-particle-fire
 particleFire.install({ THREE: THREE });
 
 //Inicialização da Cena
+var isFireOnScene = false;
 var clock = new THREE.Clock();
 var cena = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -320,8 +321,10 @@ gloader.load('../Models/Rocket.gltf', function (gltf) {
 });
 
 //Terminando de criar Foguete
+var teclas = [];
 
 //TODO Posicionar e se movimentar em relação ao foguete
+
 //Criando Fogo do Motor
 var fireRadius = 0.01;
 var fireHeight = 0.2;
@@ -332,24 +335,20 @@ var materialFire = new particleFire.Material({ color: 0xff2200 });
 materialFire.setPerspective(camera.fov, window.innerHeight / 6);
 var particleFireMesh = new THREE.Points(geometryFire, materialFire);
 particleFireMesh.rotation.x = Math.PI;
-
-cena.add(particleFireMesh);
 //Terminando de criar Fogo do Motor
-
 
 //Renderiza na Tela
 function desenhar() {
     //FIXME Retirar valores de teste, a fazer movimentação do foguete 
     //por comandos do usuário
-    model.position.y += 0.001;
-    camera.position.y += 0.001;
 
+    movimentoFoguete()
     //FIXME Fazer o fogo rotacionar junto do foguete (quem sabe criar um group para os dois)
-    particleFireMesh.position.set(model.position.x, model.position.y - 0.1, model.position.z - 0.021);
-
-    var delta = clock.getDelta();
-    particleFireMesh.material.update(delta);
-
+    if (particleFireMesh) {
+        particleFireMesh.position.set(model.position.x, model.position.y - 0.1, model.position.z - 0.021);
+        var delta = clock.getDelta();
+        particleFireMesh.material.update(delta);
+    }
     bgMesh.position.copy(camera.position);
     render.render(bgScene, camera);
     render.render(cena, camera);
@@ -360,3 +359,32 @@ function desenhar() {
 requestAnimationFrame(desenhar);
 
 
+//Controle Ignição
+window.addEventListener("keydown", keysPressed, false);
+window.addEventListener("keyup", keysReleased, false);
+
+function verificaFogo() {
+    return !isFireOnScene;
+    
+}
+
+function keysPressed(evt) {
+    teclas[evt.keyCode] = true;
+
+}
+function keysReleased(evt) {
+    teclas[evt.keyCode] = false;
+
+    cena.remove(particleFireMesh)
+
+}
+
+function movimentoFoguete() {
+    if (teclas[32]) {
+        if (verificaFogo()) {
+            cena.add(particleFireMesh);
+        }
+        model.position.y += 0.001;
+        camera.position.y = model.position.y;
+    }
+}
