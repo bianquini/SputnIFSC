@@ -249,7 +249,7 @@ cena.add(solarSystem)
 
 function update() {
     //Rotação dos Corpos Celestes
-    //containerEarth.rotation.y += 0.01;
+    containerEarth.rotation.y += 0.004;
     moonMesh.rotation.y += 0.001;
     containerMercury.rotation.y += 0.03;
     containerVenus.rotation.y += 0.04;
@@ -380,11 +380,35 @@ function keysReleased(evt) {
 }
 
 function movimentoFoguete() {
+
+    //Espaço
     if (teclas[32]) {
         if (verificaFogo()) {
             cena.add(particleFireMesh);
         }
         model.position.y += 0.001;
         camera.position.y = model.position.y;
+    }
+
+    //Tecla S
+    if(teclas[83]){
+        model.rotation.x -= 0.03;
+        particleFireMesh.rotation.x -=0.03;
+        particleFireMesh.position.x
+    }
+
+    //Tecla W
+    if(teclas[87]){
+        model.rotation.x += 0.03;
+    }
+
+    //Tecla A
+    if(teclas[65]){
+        model.rotation.y += 0.03;
+    }
+
+    //Tecla D
+    if(teclas[68]){
+        model.rotation.y -= 0.03;
     }
 }
