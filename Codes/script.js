@@ -298,7 +298,7 @@ function addLight(h, s, l, x, y, z) {
 //Criando Foguete
 var gloader = new THREE.GLTFLoader();
 var model = new THREE.Scene();
-gloader.load('../Models/rocket.gltf', function (gltf) {
+gloader.load('../Models/Rocket.gltf', function (gltf) {
 
     var rocket = gltf.scene.children[0];
     rocket.position.set(-0.04, -0.05, 13);
