@@ -334,6 +334,7 @@ var geometryFire = new particleFire.Geometry(fireRadius, fireHeight, particleCou
 var materialFire = new particleFire.Material({ color: 0xff2200 });
 materialFire.setPerspective(camera.fov, window.innerHeight / 6);
 var particleFireMesh = new THREE.Points(geometryFire, materialFire);
+particleFireMesh.position.set(-0.04, -0.15, 13);
 particleFireMesh.rotation.x = Math.PI;
 //Terminando de criar Fogo do Motor
 
@@ -345,7 +346,6 @@ function desenhar() {
     movimentoFoguete()
     //FIXME Fazer o fogo rotacionar junto do foguete (quem sabe criar um group para os dois)
     if (particleFireMesh) {
-        particleFireMesh.position.set(model.position.x, model.position.y - 0.1, model.position.z - 0.021);
         var delta = clock.getDelta();
         particleFireMesh.material.update(delta);
     }
@@ -379,6 +379,7 @@ function keysReleased(evt) {
 
 }
 
+var time = 0;
 function movimentoFoguete() {
 
     //Espaço
@@ -394,21 +395,27 @@ function movimentoFoguete() {
     if(teclas[83]){
         model.rotation.x -= 0.03;
         particleFireMesh.rotation.x -=0.03;
-        particleFireMesh.position.x
     }
 
     //Tecla W
     if(teclas[87]){
         model.rotation.x += 0.03;
+        particleFireMesh.rotation.x +=0.03;
     }
 
     //Tecla A
     if(teclas[65]){
         model.rotation.y += 0.03;
+        particleFireMesh.rotation.z -=0.03;
+        time += 0.03;
+        particleFireMesh.position.x = model.position.x * -Math.cos(time) - 0.03;
+        particleFireMesh.position.y = model.position.y * Math.sin(time) - 0.03;
+        particleFireMesh.position.z = model.position.z;
     }
 
     //Tecla D
     if(teclas[68]){
         model.rotation.y -= 0.03;
+        particleFireMesh.rotation.z +=0.03;
     }
 }
