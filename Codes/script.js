@@ -299,18 +299,22 @@ function addLight(h, s, l, x, y, z) {
 //Criando Foguete
 var gloader = new THREE.GLTFLoader();
 var model = new THREE.Scene();
+var foguete = new THREE.Group();
+
 gloader.load('../Models/Rocket.gltf', function (gltf) {
 
     var rocket = gltf.scene.children[0];
-    rocket.position.set(-0.04, -0.05, 13);
+    foguete.position.set(-0.04, -0.05, 13);
+    rocket.position.set(0, 0, 0);
     rocket.scale.set(0.02, 0.02, 0.02);
     rocket.rotation.x = Math.PI / 2;
     model = rocket;
-    cena.add(gltf.scene);
+    foguete.add(rocket)
+    cena.add(foguete);
 
     //loop para ajustar a camera ao foguete
     window.setInterval(function () {
-        controls.target = model.position;
+        controls.target = foguete.position;
     }, 2000);
 
 
@@ -319,7 +323,6 @@ gloader.load('../Models/Rocket.gltf', function (gltf) {
     console.error(error);
 
 });
-
 //Terminando de criar Foguete
 var teclas = [];
 
@@ -334,7 +337,7 @@ var geometryFire = new particleFire.Geometry(fireRadius, fireHeight, particleCou
 var materialFire = new particleFire.Material({ color: 0xff2200 });
 materialFire.setPerspective(camera.fov, window.innerHeight / 6);
 var particleFireMesh = new THREE.Points(geometryFire, materialFire);
-particleFireMesh.position.set(-0.04, -0.15, 13);
+particleFireMesh.position.set(0, -0.1, -0.02);
 particleFireMesh.rotation.x = Math.PI;
 //Terminando de criar Fogo do Motor
 
@@ -365,7 +368,7 @@ window.addEventListener("keyup", keysReleased, false);
 
 function verificaFogo() {
     return !isFireOnScene;
-    
+
 }
 
 function keysPressed(evt) {
@@ -375,47 +378,66 @@ function keysPressed(evt) {
 function keysReleased(evt) {
     teclas[evt.keyCode] = false;
 
-    cena.remove(particleFireMesh)
+    console.log(foguete.position)
 
+    if (!teclas[16]) {
+        ingnicao()
+    }
+    foguete.remove(particleFireMesh)
 }
 
+
+
+function ingnicao() {
+    window.setInterval(function () {
+        foguete.add(particleFireMesh);
+        foguete.position.y += 0.0015;
+        camera.position.y = foguete.position.y;
+
+        if (foguete.position.x == -0.04 && foguete.position.y == 0.5 && foguete.position.z == 13) {
+            foguete.position.y = 0.5
+        }
+    }, 20);
+}
 var time = 0;
 function movimentoFoguete() {
-
     //Espaço
     if (teclas[32]) {
         if (verificaFogo()) {
-            cena.add(particleFireMesh);
+            foguete.add(particleFireMesh);
         }
-        model.position.y += 0.001;
-        camera.position.y = model.position.y;
+        foguete.position.y += 0.001;
+        camera.position.y = foguete.position.y;
+
     }
 
     //Tecla S
-    if(teclas[83]){
-        model.rotation.x -= 0.03;
-        particleFireMesh.rotation.x -=0.03;
+    if (teclas[83]) {
+        foguete.rotation.x -= 0.03;
+        //particleFireMesh.rotation.x -=0.03;
     }
 
     //Tecla W
-    if(teclas[87]){
-        model.rotation.x += 0.03;
-        particleFireMesh.rotation.x +=0.03;
+    if (teclas[87]) {
+        foguete.rotation.x += 0.03;
+        //particleFireMesh.rotation.x +=0.03;
     }
 
     //Tecla A
-    if(teclas[65]){
-        model.rotation.y += 0.03;
-        particleFireMesh.rotation.z -=0.03;
-        time += 0.03;
-        particleFireMesh.position.x = model.position.x * -Math.cos(time) - 0.03;
-        particleFireMesh.position.y = model.position.y * Math.sin(time) - 0.03;
-        particleFireMesh.position.z = model.position.z;
+    if (teclas[65]) {
+        foguete.rotation.y += 0.03;
+        // particleFireMesh.rotation.z -=0.03;
+        // time += 0.03;
+        // particleFireMesh.position.x = model.position.x - 0.1 * Math.cos(time);
+        // particleFireMesh.position.y = model.position.y - 0.1 * Math.sin(time);
+        // particleFireMesh.position.z = model.position.z;
     }
 
     //Tecla D
-    if(teclas[68]){
-        model.rotation.y -= 0.03;
-        particleFireMesh.rotation.z +=0.03;
+    if (teclas[68]) {
+        foguete.rotation.y -= 0.03;
+        // particleFireMesh.rotation.z +=0.03;
     }
+
+
 }
