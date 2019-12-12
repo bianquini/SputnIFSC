@@ -390,54 +390,100 @@ function keysReleased(evt) {
 
 function ingnicao() {
     window.setInterval(function () {
-        foguete.add(particleFireMesh);
-        foguete.position.y += 0.0015;
-        camera.position.y = foguete.position.y;
 
-        if (foguete.position.x == -0.04 && foguete.position.y == 0.5 && foguete.position.z == 13) {
-            foguete.position.y = 0.5
+        if (foguete.position.x == -0.04 && foguete.position.y < 0.6 && foguete.position.z == 13) {
+            foguete.add(particleFireMesh);
+            foguete.position.y += 0.0015;
+            camera.position.y = foguete.position.y;
+        } else {
+            foguete.remove(particleFireMesh)
         }
+
     }, 20);
+
 }
 var time = 0;
 function movimentoFoguete() {
-    //Espaço
-    if (teclas[32]) {
-        if (verificaFogo()) {
-            foguete.add(particleFireMesh);
-        }
-        foguete.position.y += 0.001;
-        camera.position.y = foguete.position.y;
-
-    }
-
-    //Tecla S
-    if (teclas[83]) {
-        foguete.rotation.x -= 0.03;
-        //particleFireMesh.rotation.x -=0.03;
-    }
 
     //Tecla W
     if (teclas[87]) {
-        foguete.rotation.x += 0.03;
-        //particleFireMesh.rotation.x +=0.03;
+        if (foguete.rotation.x < -0.04) {
+            foguete.rotation.x += 0.03;
+        } else {
+            if (verificaFogo()) {
+                foguete.add(particleFireMesh);
+            }
+            foguete.position.y += 0.005;
+            camera.position.y = foguete.position.y;
+        }
     }
 
     //Tecla A
     if (teclas[65]) {
-        foguete.rotation.y += 0.03;
-        // particleFireMesh.rotation.z -=0.03;
-        // time += 0.03;
-        // particleFireMesh.position.x = model.position.x - 0.1 * Math.cos(time);
-        // particleFireMesh.position.y = model.position.y - 0.1 * Math.sin(time);
-        // particleFireMesh.position.z = model.position.z;
+        if (foguete.rotation.x < 1.55) {
+            foguete.rotation.x += 0.02;
+        }
+        else {
+            if (verificaFogo()) {
+                foguete.add(particleFireMesh);
+            }
+            foguete.position.z += 0.005;
+            camera.position.z = foguete.position.z;
+        }
     }
 
     //Tecla D
     if (teclas[68]) {
-        foguete.rotation.y -= 0.03;
-        // particleFireMesh.rotation.z +=0.03;
+        if (foguete.rotation.x > -1.55) {
+            foguete.rotation.x -= 0.03;
+        }
+        else {
+            if (verificaFogo()) {
+                foguete.add(particleFireMesh);
+            }
+            foguete.position.z -= 0.005;
+            camera.position.z = foguete.position.z;
+        }
     }
+
+
+    // //Espaço
+    // if (teclas[32]) {
+    //     if (verificaFogo()) {
+    //         foguete.add(particleFireMesh);
+    //     }
+    //     foguete.position.y += 0.001;
+    //     camera.position.y = foguete.position.y;
+
+    // }
+
+    // //Tecla S
+    // if (teclas[83]) {
+    //     foguete.rotation.x -= 0.03;
+    //     //particleFireMesh.rotation.x -=0.03;
+    // }
+
+    // //Tecla W
+    // if (teclas[87]) {
+    //     foguete.rotation.x += 0.03;
+    //     //particleFireMesh.rotation.x +=0.03;
+    // }
+
+    // //Tecla A
+    // if (teclas[65]) {
+    //     foguete.rotation.y += 0.03;
+    //     // particleFireMesh.rotation.z -=0.03;
+    //     // time += 0.03;
+    //     // particleFireMesh.position.x = model.position.x - 0.1 * Math.cos(time);
+    //     // particleFireMesh.position.y = model.position.y - 0.1 * Math.sin(time);
+    //     // particleFireMesh.position.z = model.position.z;
+    // }
+
+    // //Tecla D
+    // if (teclas[68]) {
+    //     foguete.rotation.y -= 0.03;
+    //     // particleFireMesh.rotation.z +=0.03;
+    // }
 
 
 }
