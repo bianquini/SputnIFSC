@@ -4,6 +4,14 @@ import particleFire from '../Modules/three-particle-fire/src/three-particle-fire
 
 particleFire.install({ THREE: THREE });
 
+//Tela de carregamento;
+var i = setInterval(function () {
+    clearInterval(i);
+    // The desired code is only this:
+    document.getElementById("bloqueado").style.display = "none";
+
+}, 6000);
+
 //Inicialização da Cena
 var isFireOnScene = false;
 var clock = new THREE.Clock();
