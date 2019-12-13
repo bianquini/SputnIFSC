@@ -4,10 +4,15 @@ import particleFire from '../Modules/three-particle-fire/src/three-particle-fire
 
 particleFire.install({ THREE: THREE });
 
+//teste physics
+Physijs.scripts.worker = "../Modules/physijs_worker.js";
+Physijs.scripts.ammmo = '../Modules/ammo.js';
+
+
 //Inicialização da Cena
 var isFireOnScene = false;
 var clock = new THREE.Clock();
-var cena = new THREE.Scene();
+var cena = new Physijs.Scene;
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0.3, 0.02, 13);
 
@@ -308,10 +313,13 @@ gloader.load('../Models/Rocket.gltf', function (gltf) {
     model = rocket;
     cena.add(gltf.scene);
 
+
+
+
     //loop para ajustar a camera ao foguete
     window.setInterval(function () {
         controls.target = model.position;
-    }, 2000);
+    }, 20);
 
 
 }, undefined, function (error) {
@@ -319,6 +327,28 @@ gloader.load('../Models/Rocket.gltf', function (gltf) {
     console.error(error);
 
 });
+
+var collision = new Physijs.BoxMesh(
+    new THREE.CubeGeometry(0.05, 0.05, 0.05),
+    new THREE.MeshPhongMaterial({color:0xff0000})
+);
+collision.position.set(-0.04, 1, 13);
+collision.receiveShadow = true;
+collision.castShadow = true;
+cena.add(collision);
+
+
+//Testando FISICA
+var hay = new Physijs.BoxMesh(
+    new THREE.CubeGeometry(1, 1, 1),
+    new THREE.MeshPhongMaterial({color:0xff0000}),0
+);
+hay.position.set(-0.04, 0, 13);
+hay.receiveShadow = true;
+hay.castShadow = true;
+cena.add(hay);
+
+
 
 //Terminando de criar Foguete
 var teclas = [];
@@ -344,6 +374,8 @@ function desenhar() {
     //por comandos do usuário
 
     movimentoFoguete()
+    collision.position.y += 0.001;
+    cena.simulate();
     //FIXME Fazer o fogo rotacionar junto do foguete (quem sabe criar um group para os dois)
     if (particleFireMesh) {
         var delta = clock.getDelta();
@@ -365,7 +397,7 @@ window.addEventListener("keyup", keysReleased, false);
 
 function verificaFogo() {
     return !isFireOnScene;
-    
+
 }
 
 function keysPressed(evt) {
@@ -392,21 +424,21 @@ function movimentoFoguete() {
     }
 
     //Tecla S
-    if(teclas[83]){
+    if (teclas[83]) {
         model.rotation.x -= 0.03;
-        particleFireMesh.rotation.x -=0.03;
+        particleFireMesh.rotation.x -= 0.03;
     }
 
     //Tecla W
-    if(teclas[87]){
+    if (teclas[87]) {
         model.rotation.x += 0.03;
-        particleFireMesh.rotation.x +=0.03;
+        particleFireMesh.rotation.x += 0.03;
     }
 
     //Tecla A
-    if(teclas[65]){
+    if (teclas[65]) {
         model.rotation.y += 0.03;
-        particleFireMesh.rotation.z -=0.03;
+        particleFireMesh.rotation.z -= 0.03;
         time += 0.03;
         particleFireMesh.position.x = model.position.x * -Math.cos(time) - 0.03;
         particleFireMesh.position.y = model.position.y * Math.sin(time) - 0.03;
@@ -414,8 +446,8 @@ function movimentoFoguete() {
     }
 
     //Tecla D
-    if(teclas[68]){
+    if (teclas[68]) {
         model.rotation.y -= 0.03;
-        particleFireMesh.rotation.z +=0.03;
+        particleFireMesh.rotation.z += 0.03;
     }
 }
