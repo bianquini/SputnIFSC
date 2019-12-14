@@ -386,31 +386,37 @@ function keysPressed(evt) {
 function keysReleased(evt) {
     teclas[evt.keyCode] = false;
 
-    console.log(foguete.position)
-
-    if (!teclas[16]) {
-        ingnicao()
-    }
+    ingnicao()
+    
     foguete.remove(particleFireMesh)
 }
 
 
 
 function ingnicao() {
+    var rate = 1;
+    var slowRise = 0.0015 - (0.0006 * rate);
     window.setInterval(function () {
 
-        if (foguete.position.x == -0.04 && foguete.position.y < 0.6 && foguete.position.z == 13) {
+        if (foguete.position.x == -0.04 && foguete.position.y < 0.5 && foguete.position.z == 13) {
             foguete.add(particleFireMesh);
             foguete.position.y += 0.0015;
             camera.position.y = foguete.position.y;
-        } else {
+        } else if(foguete.position.x == -0.04 && foguete.position.y < 0.6 && foguete.position.z == 13 && rate >0){
+            console.log(rate)
+            foguete.add(particleFireMesh);
+            foguete.position.y += slowRise;
+            rate+=4;
+            camera.position.y = foguete.position.y;
+        } else{
             foguete.remove(particleFireMesh)
+
         }
 
     }, 20);
 
 }
-var time = 0;
+
 function movimentoFoguete() {
 
     //Tecla W
