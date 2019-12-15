@@ -4,6 +4,8 @@ import particleFire from '../Modules/three-particle-fire/src/three-particle-fire
 
 particleFire.install({ THREE: THREE });
 
+var movimentoAtivo = false;
+
 //Tela de carregamento;
 var i = setInterval(function () {
     clearInterval(i);
@@ -387,7 +389,7 @@ function keysReleased(evt) {
     teclas[evt.keyCode] = false;
 
     ingnicao()
-    
+
     foguete.remove(particleFireMesh)
 }
 
@@ -402,15 +404,14 @@ function ingnicao() {
             foguete.add(particleFireMesh);
             foguete.position.y += 0.0015;
             camera.position.y = foguete.position.y;
-        } else if(foguete.position.x == -0.04 && foguete.position.y < 0.6 && foguete.position.z == 13 && rate >0){
-            console.log(rate)
+        } else if (foguete.position.x == -0.04 && foguete.position.y < 0.6 && foguete.position.z == 13 && rate > 0) {
             foguete.add(particleFireMesh);
             foguete.position.y += slowRise;
-            rate+=4;
+            rate += 4;
             camera.position.y = foguete.position.y;
-        } else{
+        } else {
             foguete.remove(particleFireMesh)
-
+            movimentoAtivo = true;
         }
 
     }, 20);
@@ -419,85 +420,55 @@ function ingnicao() {
 
 function movimentoFoguete() {
 
+    if (movimentoAtivo) {
+    //Espaço
+    if (teclas[32]) {
+        if (verificaFogo())
+            foguete.add(particleFireMesh);
+
+        if (teclas[16])
+            foguete.translateY(0.005 * Math.PI * 2);
+        else
+            foguete.translateY(0.005 * Math.PI / 2);
+
+        controls.target = foguete.position;
+
+    }
+
+    //Tecla S
+    if (teclas[83]) {
+        foguete.rotation.x -= 0.03;
+    }
+
     //Tecla W
     if (teclas[87]) {
-        if (foguete.rotation.x < -0.04) {
-            foguete.rotation.x += 0.03;
-        } else {
-            if (verificaFogo()) {
-                foguete.add(particleFireMesh);
-            }
-            foguete.position.y += 0.005;
-            camera.position.y = foguete.position.y;
-        }
+        foguete.rotation.x += 0.03;
     }
 
     //Tecla A
     if (teclas[65]) {
-        if (foguete.rotation.x < 1.55) {
-            foguete.rotation.x += 0.02;
-        }
-        else {
-            if (verificaFogo()) {
-                foguete.add(particleFireMesh);
-            }
-            foguete.position.z += 0.005;
-            camera.position.z = foguete.position.z;
-        }
+        foguete.rotation.z += 0.03;
     }
 
     //Tecla D
     if (teclas[68]) {
-        if (foguete.rotation.x > -1.55) {
-            foguete.rotation.x -= 0.03;
-        }
-        else {
-            if (verificaFogo()) {
-                foguete.add(particleFireMesh);
-            }
-            foguete.position.z -= 0.005;
-            camera.position.z = foguete.position.z;
-        }
+        foguete.rotation.z -= 0.03;
     }
 
+    //Tecla C
+    if(teclas[67]){
+        camera.position.set(foguete.position.x,foguete.position.y+ 0.5,foguete.position.z)
+    }
 
-    // //Espaço
-    // if (teclas[32]) {
-    //     if (verificaFogo()) {
-    //         foguete.add(particleFireMesh);
-    //     }
-    //     foguete.position.y += 0.001;
-    //     camera.position.y = foguete.position.y;
-
-    // }
-
-    // //Tecla S
-    // if (teclas[83]) {
-    //     foguete.rotation.x -= 0.03;
-    //     //particleFireMesh.rotation.x -=0.03;
-    // }
-
-    // //Tecla W
-    // if (teclas[87]) {
-    //     foguete.rotation.x += 0.03;
-    //     //particleFireMesh.rotation.x +=0.03;
-    // }
-
-    // //Tecla A
-    // if (teclas[65]) {
-    //     foguete.rotation.y += 0.03;
-    //     // particleFireMesh.rotation.z -=0.03;
-    //     // time += 0.03;
-    //     // particleFireMesh.position.x = model.position.x - 0.1 * Math.cos(time);
-    //     // particleFireMesh.position.y = model.position.y - 0.1 * Math.sin(time);
-    //     // particleFireMesh.position.z = model.position.z;
-    // }
-
-    // //Tecla D
-    // if (teclas[68]) {
-    //     foguete.rotation.y -= 0.03;
-    //     // particleFireMesh.rotation.z +=0.03;
-    // }
+    //Tecla R
+    if(teclas[82]){
+        foguete.rotation.x = foguete.rotation.y = foguete.rotation.z = 0;
+        foguete.position.set(-0.04, -0.05, 13);
+        camera.position.set(0.3, 0.02, 13);
+        
+        controls.target = foguete.position;
+    }
+}
 
 
 }
