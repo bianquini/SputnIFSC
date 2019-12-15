@@ -16,5 +16,6 @@ Material Extra:
 - Luz com efeito Lens flare: https://threejs.org/examples/#webgl_lensflares
 - Utilização de teclas do teclado: https://www.kirupa.com/canvas/moving_shapes_canvas_keyboard.htm
 - Loop recursivo: https://www.w3schools.com/jsref/met_win_setinterval.asp
+- Importação de modelos 3D: https://threejs.org/examples/?q=gltf#webgl_loader_gltf
 - Blender: https://www.blender.org/
 - Modelo 3D do foguete: https://www.youtube.com/watch?v=35c-WkTH7TI
