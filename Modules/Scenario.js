@@ -138,7 +138,7 @@ class Scenario {
     getSpace(bgScene) {
         var loader = new THREE.TextureLoader();
         var texture = loader.load(
-            '../Modules/threex.planets/images/maps/tycho-skymap.jpg',
+            '../Images/maps/tycho-skymap.jpg',
         );
         texture.magFilter = THREE.LinearFilter;
         texture.minFilter = THREE.LinearFilter;
