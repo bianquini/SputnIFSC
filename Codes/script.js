@@ -1,21 +1,24 @@
 "use strict";
+
+//adicionando as bibliotecas de lensflare e da partícula de fogo
 import { Lensflare, LensflareElement } from '../Modules/lensflare/Lensflare.js';
 import particleFire from '../Modules/three-particle-fire/src/three-particle-fire.js';
-
 particleFire.install({ THREE: THREE });
 
+//#region Inicializacao
+
+var teclas = [];
+var isFireOnScene = false;
 var movimentoAtivo = false;
 
 //Tela de carregamento;
-var i = setInterval(function () {
-    clearInterval(i);
-    // The desired code is only this:
+var loading = setInterval(function () {
+    clearInterval(loading);
     document.getElementById("bloqueado").style.display = "none";
 
 }, 6000);
 
 //Inicialização da Cena
-var isFireOnScene = false;
 var clock = new THREE.Clock();
 var cena = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -29,48 +32,31 @@ render.autoClearColor = false;
 var canvas = cenario.getCanvas();
 document.body.appendChild(canvas);
 
-//Luz Ambiente
-var luz = cenario.buildAmbientLight(0, 0, 1);
-cena.add(luz);
-
-//Ifsc
-var earth = new Earth();
-var ifsc = earth.getEarth();
-cena.add(ifsc);
-
-//Plataforma
-var plataform = earth.getPlataform();
-cena.add(plataform);
-
 //Controle de Câmera
 var controls = new THREE.OrbitControls(camera, canvas);
 controls.update();
 
-//Iniciando Textura do Espaço
-var loader = new THREE.TextureLoader();
-var texture = loader.load(
-    '../Modules/threex.planets/images/maps/tycho-skymap.jpg',
-);
-texture.magFilter = THREE.LinearFilter;
-texture.minFilter = THREE.LinearFilter;
+//Luz Ambiente
+var luz = cenario.buildAmbientLight(0, 0, 1);
+cena.add(luz);
 
+
+//#endregion Inicializacao
+
+//Ifsc
+var ifsc = cenario.getIFSC();
+cena.add(ifsc);
+
+//Plataforma
+var plataform = cenario.getPlatform();
+cena.add(plataform);
+
+//Criando Textura do Espaço
 var bgScene = new THREE.Scene();
-var bgMesh;
-{
-    var shader = THREE.ShaderLib.equirect;
-    var material = new THREE.ShaderMaterial({
-        fragmentShader: shader.fragmentShader,
-        vertexShader: shader.vertexShader,
-        uniforms: shader.uniforms,
-        depthWrite: false,
-        side: THREE.BackSide,
-    });
-    material.uniforms.tEquirect.value = texture;
-    var plane = new THREE.SphereGeometry(1000, 32, 32);
-    bgMesh = new THREE.Mesh(plane, material);
-    bgScene.add(bgMesh);
-}
+var bgMesh = cenario.getSpace(bgScene);
 
+
+//#region Planetas
 //Criando a Terra, Atmosfera e Lua
 var containerEarth = new THREE.Object3D()
 containerEarth.position.z = 13
@@ -152,7 +138,6 @@ cena.add(containerSaturn)
 var saturnMesh = THREEx.Planets.create("Saturn")
 saturnMesh.receiveShadow = true
 saturnMesh.castShadow = true
-//saturnMesh.getObjectByName("").rotation.y += 0.008;
 saturnMesh.rotation.z = 0
 containerSaturn.add(saturnMesh)
 //Terminando Saturno
@@ -191,17 +176,6 @@ plutoMesh.receiveShadow = true
 plutoMesh.castShadow = true
 containerPluto.add(plutoMesh)
 //Terminando Plutao
-
-//FIXME Decidir se será usado uma luz, ou um objeto 
-//Criando Sol
-// var containerSun = new THREE.Object3D()
-// cena.add(containerSun)
-
-// var sunMesh = THREEx.Planets.create("Sun")
-// sunMesh.receiveShadow = true
-// sunMesh.castShadow = true
-// containerSun.add(sunMesh)
-//Terminando Sol
 
 //Orbita de Mercurio
 var mercuryOrbit = new THREE.Object3D();
@@ -254,7 +228,6 @@ solarSystem.add(saturnOrbit);
 solarSystem.add(uranusOrbit);
 solarSystem.add(neptuneOrbit);
 solarSystem.add(plutoOrbit);
-
 cena.add(solarSystem)
 
 function update() {
@@ -271,8 +244,6 @@ function update() {
     containerNeptune.rotation.y += 0.009;
     containerPluto.rotation.y += 0.01;
 
-    //containerSun.rotation.y += 0.001;
-
     //Translação dos Corpos Celestes
     //earthOrbit.rotation.y += 0.001;
     mercuryOrbit.rotation.y += 0.005;
@@ -285,7 +256,9 @@ function update() {
     plutoOrbit.rotation.y += 0.00008;
 }
 
+//#endregion Planetas
 
+//#region LenFlare
 // lensflares
 var textureLoader = new THREE.TextureLoader();
 var textureFlare0 = textureLoader.load('../Images/lensflare/lensflare0.png');
@@ -305,10 +278,10 @@ function addLight(h, s, l, x, y, z) {
     light.position.z = 0;
     cena.add(light);
 }
+//#endregion LenFlare
 
-//Criando Foguete
+//#region Foguete
 var gloader = new THREE.GLTFLoader();
-var model = new THREE.Scene();
 var foguete = new THREE.Group();
 
 gloader.load('../Models/Rocket.gltf', function (gltf) {
@@ -318,7 +291,6 @@ gloader.load('../Models/Rocket.gltf', function (gltf) {
     rocket.position.set(0, 0, 0);
     rocket.scale.set(0.02, 0.02, 0.02);
     rocket.rotation.x = Math.PI / 2;
-    model = rocket;
     foguete.add(rocket)
     cena.add(foguete);
 
@@ -333,12 +305,9 @@ gloader.load('../Models/Rocket.gltf', function (gltf) {
     console.error(error);
 
 });
-//Terminando de criar Foguete
-var teclas = [];
+//#endregion Foguete
 
-//TODO Posicionar e se movimentar em relação ao foguete
-
-//Criando Fogo do Motor
+//#region Fogo
 var fireRadius = 0.01;
 var fireHeight = 0.2;
 var particleCount = 60;
@@ -349,15 +318,13 @@ materialFire.setPerspective(camera.fov, window.innerHeight / 6);
 var particleFireMesh = new THREE.Points(geometryFire, materialFire);
 particleFireMesh.position.set(0, -0.1, -0.02);
 particleFireMesh.rotation.x = Math.PI;
-//Terminando de criar Fogo do Motor
+//#endregion Fogo
+
 
 //Renderiza na Tela
 function desenhar() {
-    //FIXME Retirar valores de teste, a fazer movimentação do foguete 
-    //por comandos do usuário
 
     movimentoFoguete()
-    //FIXME Fazer o fogo rotacionar junto do foguete (quem sabe criar um group para os dois)
     if (particleFireMesh) {
         var delta = clock.getDelta();
         particleFireMesh.material.update(delta);
@@ -371,7 +338,7 @@ function desenhar() {
 }
 requestAnimationFrame(desenhar);
 
-
+//#region Controle_Teclas
 //Controle Ignição
 window.addEventListener("keydown", keysPressed, false);
 window.addEventListener("keyup", keysReleased, false);
@@ -392,8 +359,7 @@ function keysReleased(evt) {
 
     foguete.remove(particleFireMesh)
 }
-
-
+//#endregion Controle_Teclas
 
 function ingnicao() {
     var rate = 1;
@@ -417,6 +383,7 @@ function ingnicao() {
     }, 20);
 
 }
+
 
 function movimentoFoguete() {
 
@@ -462,11 +429,7 @@ function movimentoFoguete() {
 
     //Tecla R
     if(teclas[82]){
-        foguete.rotation.x = foguete.rotation.y = foguete.rotation.z = 0;
-        foguete.position.set(-0.04, -0.05, 13);
-        camera.position.set(0.3, 0.02, 13);
-        
-        controls.target = foguete.position;
+        location.reload()
     }
 }
 
